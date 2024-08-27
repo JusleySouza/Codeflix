@@ -62,7 +62,7 @@ public class Category extends AggregateRoot<CategoryID> {
     }
 
     public Category update(final String aName, final String aDescription, final boolean isActive){
-        if(isActive()){
+        if(isActive){
             activate();
         }else{
             deactivate();
