@@ -41,4 +41,15 @@ public class DeleteCategoryUseCaseTest {
         Mockito.verify(categoryGateway, times(1)).deleteById(eq(expectedId));
     }
 
+    @Test
+    public void givenAInvalidId_whenCallsDeleteCategory_shouldBeOk(){
+        final var expectedId = CategoryID.from("123");
+
+        doNothing().when(categoryGateway).deleteById(eq(expectedId));
+
+        Assertions.assertDoesNotThrow(() -> useCase.execute(expectedId.getValue()));
+
+        Mockito.verify(categoryGateway, times(1)).deleteById(eq(expectedId));
+    }
+
 }
