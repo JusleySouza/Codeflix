@@ -53,4 +53,17 @@ public class GetCategoryByIdUseCaseTest {
         Assertions.assertEquals(aCategory.getDeletedAt(), actualCategory.deletedAt());
     }
 
+    @Test
+    public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound(){
+        final var expectedId = CategoryID.from("123");
+        final var expectedErrorMessage = "Category with ID 123 was not-found";
+
+        when(categoryGateway.findById(eq(expectedId))).thenReturn(Optional.empty());
+
+        final var actualException = Assertions.assertThrows(
+                DomainException.class, () -> useCase.execute(expectedId.getValue()));
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+    }
+
 }
