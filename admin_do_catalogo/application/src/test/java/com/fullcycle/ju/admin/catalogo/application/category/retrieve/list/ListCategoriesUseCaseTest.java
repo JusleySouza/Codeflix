@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class ListCategoriesUseCaseTest {
 
     @InjectMocks
-    private DefaultListCategoriesUseCaseTest useCase;
+    private DefaultListCategoriesUseCase useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
@@ -35,7 +35,7 @@ public class ListCategoriesUseCaseTest {
     @Test
     public void givenAValidQuery_whenCallsListCategories_thenShouldReturnCategories(){
         final var categories = List.of(
-                Category.newCategory("Filmes", null, true)
+                Category.newCategory("Filmes", null, true),
                 Category.newCategory("Series", null, true)
         );
 
