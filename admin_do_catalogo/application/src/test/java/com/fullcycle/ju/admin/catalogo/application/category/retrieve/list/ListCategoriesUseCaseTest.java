@@ -91,4 +91,22 @@ public class ListCategoriesUseCaseTest {
         Assertions.assertEquals(categories.size(), actualResult.total());
     }
 
+    @Test
+    public void givenAValidQuery_whenGatewayThrowsException_shouldReturnException(){
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "createdAt";
+        final var expectedDirection = "asc" ;
+        final var expectedErrorMessage = "Gateway error" ;
+
+        final var aQuery = new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+
+        when(categoryGateway.findAll(eq(aQuery))).thenThrow(new IllegalStateException(expectedErrorMessage));
+
+        final var actualException = Assertions.assertThrows(IllegalStateException.class, () -> useCase.execute(aQuery));
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
+    }
+
 }
