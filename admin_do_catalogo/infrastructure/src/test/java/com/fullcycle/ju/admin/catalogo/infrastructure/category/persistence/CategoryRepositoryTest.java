@@ -54,5 +54,24 @@ public class CategoryRepositoryTest {
         Assertions.assertEquals(expectedMessage, actualCause.getMessage());
     }
 
+    @Test
+    public void givenAnInvalidNullUpdatedAt_whenCallsSave_shouldReturnError() {
+        final var expectedPropertyName = "updatedAt";
+        final var expectedMessage = "not-null property references a null or transient value : com.fullcycle.ju.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity.updatedAt";
+
+        final var aCategory = Category.newCategory("Filmes", "A categoria mais assistida", true);
+
+        final var anEntity = CategoryJpaEntity.from(aCategory);
+        anEntity.setUpdatedAt(null);
+
+        final var actualException =
+                Assertions.assertThrows(DataIntegrityViolationException.class, () -> categoryRepository.save(anEntity));
+
+        final var actualCause =
+                Assertions.assertInstanceOf(PropertyValueException.class, actualException.getCause());
+
+        Assertions.assertEquals(expectedPropertyName, actualCause.getPropertyName());
+        Assertions.assertEquals(expectedMessage, actualCause.getMessage());
+    }
 
 }
