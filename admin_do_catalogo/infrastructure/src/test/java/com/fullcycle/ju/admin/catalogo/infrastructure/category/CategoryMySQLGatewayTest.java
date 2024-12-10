@@ -284,4 +284,33 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(documentarios.getId(), actualResult.items().get(0).getId());
     }
 
+    @Test
+    public void givenPrePersistedCategoriesAndMaisAssistidaAsTerms_whenCallsFindAllAndTermsMatchsCategoryDescription_shouldReturnPaginated() {
+        final var expectedPage = 0;
+        final var expectedPerPage = 1;
+        final var expectedTotal = 1;
+        final var filmes = Category.newCategory("Filmes", "A categoria mais assistida", true);
+        final var series = Category.newCategory("Séries", "Uma categoria assistida", true);
+        final var documentarios = Category.newCategory("Documentários", "A categoria menos assistida", true);
+
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        categoryRepository.saveAll(List.of(
+                CategoryJpaEntity.from(filmes),
+                CategoryJpaEntity.from(series),
+                CategoryJpaEntity.from(documentarios)
+        ));
+
+        Assertions.assertEquals(3, categoryRepository.count());
+
+        final var query = new CategorySearchQuery(0, 1, "MAIS ASSISTIDA", "name", "asc");
+        final var actualResult = categoryGateway.findAll(query);
+
+        Assertions.assertEquals(expectedPage, actualResult.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualResult.perPage());
+        Assertions.assertEquals(expectedTotal, actualResult.total());
+        Assertions.assertEquals(expectedPerPage, actualResult.items().size());
+        Assertions.assertEquals(filmes.getId(), actualResult.items().get(0).getId());
+    }
+
 }
