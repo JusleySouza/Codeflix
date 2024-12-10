@@ -1,6 +1,7 @@
 package com.fullcycle.ju.admin.catalogo.infrastructure.category;
 
 import com.fullcycle.ju.admin.catalogo.domain.category.CategoryID;
+import com.fullcycle.ju.admin.catalogo.domain.category.CategorySearchQuery;
 import com.fullcycle.ju.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fullcycle.ju.admin.catalogo.domain.category.Category;
 import com.fullcycle.ju.admin.catalogo.infrastructure.MySQLGatewayTest;
 import com.fullcycle.ju.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
+
+import java.util.List;
 
 @MySQLGatewayTest
 public class CategoryMySQLGatewayTest {
@@ -153,6 +156,35 @@ public class CategoryMySQLGatewayTest {
         final var actualCategory = categoryGateway.findById(CategoryID.from("empty"));
 
         Assertions.assertTrue(actualCategory.isEmpty());
+    }
+
+    @Test
+    public void givenPrePersistedCategories_whenCallsFindAll_shouldReturnPaginated() {
+        final var expectedPage = 0;
+        final var expectedPerPage = 1;
+        final var expectedTotal = 3;
+        final var filmes = Category.newCategory("Filmes", null, true);
+        final var series = Category.newCategory("Séries", null, true);
+        final var documentarios = Category.newCategory("Documentários", null, true);
+
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        categoryRepository.saveAll(List.of(
+                CategoryJpaEntity.from(filmes),
+                CategoryJpaEntity.from(series),
+                CategoryJpaEntity.from(documentarios)
+        ));
+
+        Assertions.assertEquals(3, categoryRepository.count());
+
+        final var query = new CategorySearchQuery(0, 1, "", "name", "asc");
+        final var actualResult = categoryGateway.findAll(query);
+
+        Assertions.assertEquals(expectedPage, actualResult.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualResult.perPage());
+        Assertions.assertEquals(expectedTotal, actualResult.total());
+        Assertions.assertEquals(expectedPerPage, actualResult.items().size());
+        Assertions.assertEquals(documentarios.getId(), actualResult.items().get(0).getId());
     }
 
 }
