@@ -1,7 +1,7 @@
 package com.fullcycle.ju.admin.catalogo.infrastructure.category.persistence;
 
 import com.fullcycle.ju.admin.catalogo.domain.category.Category;
-import com.fullcycle.ju.admin.catalogo.infrastructure.MySQLGatewayTest;
+import com.fullcycle.ju.admin.catalogo.MySQLGatewayTest;
 import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
