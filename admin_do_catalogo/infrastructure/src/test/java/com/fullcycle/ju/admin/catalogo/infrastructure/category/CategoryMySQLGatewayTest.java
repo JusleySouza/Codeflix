@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.fullcycle.ju.admin.catalogo.domain.category.Category;
-import com.fullcycle.ju.admin.catalogo.infrastructure.MySQLGatewayTest;
+import com.fullcycle.ju.admin.catalogo.MySQLGatewayTest;
 import com.fullcycle.ju.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
 
 import java.util.List;
