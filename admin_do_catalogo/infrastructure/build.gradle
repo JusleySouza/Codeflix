@@ -26,6 +26,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":application"))
 
+    implementation group: 'io.vavr', name: 'vavr', version: '0.10.4'
+
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.3.0'
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
