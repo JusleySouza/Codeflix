@@ -102,4 +102,24 @@ public class CreateCategoryUseCaseIT {
         Assertions.assertNotNull(actualCategory.getDeletedAt());
     }
 
+    @Test
+    public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnAException() {
+        final var expectedName = "Filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+        final var expectedErrorCount = 1;
+        final var expectedErrorMessage = "Gateway error";
+
+        final var aCommand =
+                CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+
+        doThrow(new IllegalStateException(expectedErrorMessage))
+                .when(categoryGateway).create(any());
+
+        final var notification = useCase.execute(aCommand).getLeft();
+
+        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
+    }
+
 }
