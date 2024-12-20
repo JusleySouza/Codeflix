@@ -74,4 +74,32 @@ public class CreateCategoryUseCaseIT {
         Mockito.verify(categoryGateway, times(0)).create(any());
     }
 
+    @Test
+    public void givenAValidCommandWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId() {
+        final var expectedName = "Filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = false;
+
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        final var aCommand =
+                CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+
+        final var actualOutput = useCase.execute(aCommand).get();
+
+        Assertions.assertNotNull(actualOutput);
+        Assertions.assertNotNull(actualOutput.id());
+        Assertions.assertEquals(1, categoryRepository.count());
+
+        final var actualCategory =
+                categoryRepository.findById(actualOutput.id().getValue()).get();
+
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        Assertions.assertNotNull(actualCategory.getCreatedAt());
+        Assertions.assertNotNull(actualCategory.getUpdatedAt());
+        Assertions.assertNotNull(actualCategory.getDeletedAt());
+    }
+
 }
